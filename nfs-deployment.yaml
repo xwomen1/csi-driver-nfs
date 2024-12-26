@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-script-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: my-script-app
+  template:
+    metadata:
+      labels:
+        app: my-script-app
+    spec:
+      containers:
+      - name: my-script-container
+        image: ttldlinhtm/my-script:latest
+        imagePullPolicy: Always
+        command: ["/bin/bash", "-c", "/app/input_script.sh"] # Chạy đúng script
+        stdin: true
+        tty: true
+        volumeMounts:
+        - name: nfs-volume
+          mountPath: /mnt
+      volumes:
+      - name: nfs-volume
+        persistentVolumeClaim:
+          claimName: nfs-pvc
